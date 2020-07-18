@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import model.User;
+import util.RadixTree;
 
 public class Server implements Serializable {
 
@@ -14,6 +15,7 @@ public class Server implements Serializable {
 	private transient ServerSocket serverSocket;
 	private transient Map<String, ClientHandler> clients = new ConcurrentHashMap<>();
 	private final Map<String, User> users = new ConcurrentHashMap<>();
+	private final RadixTree<User> usernames = new RadixTree<>();
 	private String objectFilePath;
 
 	public Server(int port, String objectFilePath) {
@@ -75,6 +77,7 @@ public class Server implements Serializable {
 		}
 		User user = new User(username, password);
 		this.users.put(username, user);
+		this.usernames.put(username, user);
 		this.saveToFile();
 		return user;
 	}
