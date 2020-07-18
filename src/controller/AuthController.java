@@ -2,8 +2,11 @@ package controller;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import model.network.commands.*;
 import model.network.responses.*;
 import helper.*;
@@ -11,6 +14,23 @@ import helper.*;
 import java.io.IOException;
 
 import db.DB;
+
+class AuthControllerLoginEventHandler implements EventHandler<KeyEvent> {
+
+	AuthController controller;
+
+	public AuthControllerLoginEventHandler(AuthController controller) {
+		this.controller = controller;
+	}
+
+	@Override
+	public void handle(KeyEvent keyEvent) {
+		if (keyEvent.getCode() == KeyCode.ENTER) {
+			this.controller.login();
+		}
+	}
+
+}
 
 public class AuthController {
 
@@ -28,6 +48,25 @@ public class AuthController {
 
 	@FXML
 	private Label errorLbl;
+
+	public void initialize() {
+		usernameField
+				.setOnKeyPressed(new AuthControllerLoginEventHandler(this));
+		passwordField
+				.setOnKeyPressed(new AuthControllerLoginEventHandler(this));
+	}
+
+	public void login(ActionEvent actionEvent) throws IOException {
+		this.login();
+	}
+
+	public void signUp(ActionEvent actionEvent) throws IOException {
+		this.signUp();
+	}
+
+	void login() {
+		(new Thread(this.getLoginHandler())).start();
+	}
 
 	private Runnable getLoginHandler() {
 		Runnable runnable = new Runnable() {
@@ -123,6 +162,10 @@ public class AuthController {
 		return runnable;
 	}
 
+	private void signUp() {
+		(new Thread(this.getSignUpHandler())).start();
+	}
+
 	private Runnable getSignUpHandler() {
 		Runnable runnable = new Runnable() {
 			@Override
@@ -215,14 +258,6 @@ public class AuthController {
 			}
 		};
 		return runnable;
-	}
-
-	public void login(ActionEvent actionEvent) throws IOException {
-		(new Thread(this.getLoginHandler())).start();
-	}
-
-	public void signUp(ActionEvent actionEvent) throws IOException {
-		(new Thread(this.getSignUpHandler())).start();
 	}
 
 }

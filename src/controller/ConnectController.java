@@ -1,9 +1,10 @@
 package controller;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
+import javafx.event.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.*;
 
 import java.io.*;
 import java.net.Socket;
@@ -11,6 +12,23 @@ import java.net.Socket;
 import db.DB;
 import helper.InputValidator;
 import helper.SceneLoader;
+
+class ConnectControllerSubmitEventHandler implements EventHandler<KeyEvent> {
+
+	ConnectController controller;
+
+	public ConnectControllerSubmitEventHandler(ConnectController controller) {
+		this.controller = controller;
+	}
+
+	@Override
+	public void handle(KeyEvent keyEvent) {
+		if (keyEvent.getCode() == KeyCode.ENTER) {
+			this.controller.submit();
+		}
+	}
+
+}
 
 public class ConnectController {
 
@@ -25,6 +43,21 @@ public class ConnectController {
 
 	@FXML
 	private Label errorLbl;
+
+	public void initialize() {
+		hostField
+				.setOnKeyPressed(new ConnectControllerSubmitEventHandler(this));
+		portField
+				.setOnKeyPressed(new ConnectControllerSubmitEventHandler(this));
+	}
+
+	public void connect(ActionEvent actionEvent) throws IOException {
+		this.submit();
+	}
+
+	void submit() {
+		(new Thread(this.getSubmitHandler())).start();
+	}
 
 	private Runnable getSubmitHandler() {
 		Runnable runnable = new Runnable() {
@@ -97,10 +130,6 @@ public class ConnectController {
 			}
 		};
 		return runnable;
-	}
-
-	public void connect(ActionEvent actionEvent) throws IOException {
-		(new Thread(this.getSubmitHandler())).start();
 	}
 
 }
