@@ -1,19 +1,24 @@
 package controller;
 
 import java.io.IOException;
+import java.util.*;
 
 import db.DB;
-import helper.ResponseHandler;
-import helper.SceneLoader;
+import helper.*;
 import javafx.application.Platform;
+import javafx.collections.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import model.network.commands.SearchCommand;
+import model.User;
+import model.network.commands.*;
 import model.network.responses.*;
 import widgets.AutoCompleteTextField;
 
 public class DashboardController implements Controller {
+
+	ObservableList<User> users = FXCollections.<User>observableArrayList();
+	ObservableList<User> scoreboard = FXCollections.<User>observableArrayList();
 
 	@FXML
 	private Label welcomeLbl;
@@ -21,10 +26,20 @@ public class DashboardController implements Controller {
 	@FXML
 	private AutoCompleteTextField searchField;
 
+	@FXML
+	private TableView<User> usersTbl;
+
+	@FXML
+	private TableView<User> scoreboardTbl;
+
 	public void initialize() {
 		ResponseHandler.controller = this;
+		usersTbl.setItems(this.users);
+		scoreboardTbl.setItems(this.users);
 		this.startSearchHandler();
 		this.welcomeLbl.setText("Welcome, " + DB.user.getUsername() + '!');
+		this.sendSearchCommand("");
+		this.sendScoreboardCommand();
 	}
 
 	public void showHistoryPage(ActionEvent actionEvent) throws IOException {
@@ -45,7 +60,23 @@ public class DashboardController implements Controller {
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
-					searchField.getEntries().addAll(searchResponse.usernames);
+					List<User> users = searchResponse.users;
+					List<String> usernames = new ArrayList<>();
+					for (User user : users) {
+						usernames.add(user.getUsername());
+					}
+					searchField.getEntries().addAll(usernames);
+					usersTbl.getItems().clear();
+					usersTbl.getItems().addAll(users);
+				}
+			});
+		} else if (response instanceof ScoreboardResponse) {
+			ScoreboardResponse scoreboardResponse = (ScoreboardResponse) response;
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					scoreboardTbl.getItems().clear();
+					scoreboardTbl.getItems().addAll(scoreboardResponse.users);
 				}
 			});
 		}
@@ -62,24 +93,41 @@ public class DashboardController implements Controller {
 					Runnable runnable = new Runnable() {
 						@Override
 						public void run() {
-							if (searchField.getText().isEmpty()) {
-								return;
+							String keyword = searchField.getText();
+							if (keyword == null) {
+								keyword = "";
 							}
-							Platform.runLater(new Runnable() {
-								@Override
-								public void run() {
-									try {
-										DB.oos.writeObject(new SearchCommand(
-												searchField.getText()));
-									} catch (IOException e) {
-										e.printStackTrace();
-									}
-								}
-							});
+							sendSearchCommand(keyword);
 						}
 					};
 					(new Thread(runnable)).start();
 				});
+	}
+
+	private void sendSearchCommand(String prefix) {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					DB.oos.writeObject(new SearchCommand(prefix));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	private void sendScoreboardCommand() {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					DB.oos.writeObject(new ScoreboardCommand());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 
 }

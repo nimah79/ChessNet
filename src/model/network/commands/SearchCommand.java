@@ -14,8 +14,8 @@ public class SearchCommand implements Command {
 
 	@Override
 	public void handle(ClientHandler clientHandler) {
-		clientHandler.sendResponse(new SearchResponse(
-				clientHandler.getUsernamesStartingWith(this.prefix)));
+		clientHandler.sendResponse(
+				new SearchResponse(clientHandler.getUsers(this.prefix)));
 	}
 
 }

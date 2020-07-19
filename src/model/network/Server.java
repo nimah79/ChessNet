@@ -15,7 +15,7 @@ public class Server implements Serializable {
 	private transient ServerSocket serverSocket;
 	private transient Map<String, ClientHandler> clients = new ConcurrentHashMap<>();
 	private final Map<String, User> users = new ConcurrentHashMap<>();
-	private final RadixTree<User> usernames = new RadixTree<>();
+	private final RadixTree<User> usersTree = new RadixTree<>();
 	private String objectFilePath;
 
 	public Server(int port, String objectFilePath) {
@@ -77,19 +77,13 @@ public class Server implements Serializable {
 		}
 		User user = new User(username, password);
 		this.users.put(username, user);
-		this.usernames.put(username, user);
+		this.usersTree.put(username, user);
 		this.saveToFile();
 		return user;
 	}
 
-	public List<String> getUsernamesStaringWith(String prefix) {
-		List<String> usernames = new ArrayList<>();
-		for (String username : this.users.keySet()) {
-			if (username.startsWith(prefix)) {
-				usernames.add(username);
-			}
-		}
-		return usernames;
+	public List<User> getUsers(String prefix) {
+		return this.usersTree.getValuesWithPrefix(prefix);
 	}
 
 	/**

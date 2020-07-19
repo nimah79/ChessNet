@@ -5,6 +5,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import widgets.AutoCompleteTextField?>
@@ -21,20 +22,18 @@
 			</font>
 		</Label>
 		<Button fx:id="historyBtn" layoutX="24.0" layoutY="73.0"
-			mnemonicParsing="false" onAction="#showHistoryPage"
-			prefHeight="36.0" prefWidth="193.0" text="Games History">
+			mnemonicParsing="false" onAction="#showHistoryPage" prefHeight="36.0"
+			prefWidth="193.0" text="Games History">
 		</Button>
-		<Label fx:id="errorLbl" layoutX="369.0" layoutY="555.0"
-			scaleShape="false" textFill="RED" visible="false" />
 		<Button fx:id="profileBtn" layoutX="24.0" layoutY="113.0"
-			mnemonicParsing="false" onAction="#showProfilePage"
-			prefHeight="36.0" prefWidth="193.0" text="Profile" />
+			mnemonicParsing="false" onAction="#showProfilePage" prefHeight="36.0"
+			prefWidth="193.0" text="Profile" />
 		<Button fx:id="aboutBtn" layoutX="24.0" layoutY="154.0"
 			mnemonicParsing="false" onAction="#showAboutPage" prefHeight="36.0"
 			prefWidth="193.0" text="About" />
 		<Button fx:id="logoutBtn" layoutX="24.0" layoutY="194.0"
-			mnemonicParsing="false" onAction="#logout"
-			prefHeight="36.0" prefWidth="193.0" text="Logout" />
+			mnemonicParsing="false" onAction="#logout" prefHeight="36.0"
+			prefWidth="193.0" text="Logout" />
 		<Label layoutX="263.0" layoutY="25.0" text="Play!">
 			<font>
 				<Font name="System Bold" size="18.0" />
@@ -45,8 +44,21 @@
 		<TableView fx:id="usersTbl" layoutX="263.0" layoutY="94.0"
 			prefHeight="405.0" prefWidth="735.0">
 			<columns>
-				<TableColumn prefWidth="75.0" text="C1" />
-				<TableColumn prefWidth="75.0" text="C2" />
+				<TableColumn prefWidth="245.0" text="Username">
+					<cellValueFactory>
+						<PropertyValueFactory property="username" />
+					</cellValueFactory>
+				</TableColumn>
+				<TableColumn prefWidth="245.0" text="# of Wins">
+					<cellValueFactory>
+						<PropertyValueFactory property="winsCount" />
+					</cellValueFactory>
+				</TableColumn>
+				<TableColumn prefWidth="243.0" text="# of loses">
+					<cellValueFactory>
+						<PropertyValueFactory property="losesCount" />
+					</cellValueFactory>
+				</TableColumn>
 			</columns>
 		</TableView>
 		<Label layoutX="24.0" layoutY="513.0" text="Scoreboard">
@@ -57,8 +69,21 @@
 		<TableView fx:id="scoreboardTbl" layoutX="25.0"
 			layoutY="546.0" prefHeight="196.0" prefWidth="974.0">
 			<columns>
-				<TableColumn prefWidth="75.0" text="C1" />
-				<TableColumn prefWidth="75.0" text="C2" />
+				<TableColumn prefWidth="324.0" text="Username">
+					<cellValueFactory>
+						<PropertyValueFactory property="username" />
+					</cellValueFactory>
+				</TableColumn>
+				<TableColumn prefWidth="324.0" text="# of Wins">
+					<cellValueFactory>
+						<PropertyValueFactory property="winsCount" />
+					</cellValueFactory>
+				</TableColumn>
+				<TableColumn prefWidth="324.0" text="# of loses">
+					<cellValueFactory>
+						<PropertyValueFactory property="losesCount" />
+					</cellValueFactory>
+				</TableColumn>
 			</columns>
 		</TableView>
 	</children>

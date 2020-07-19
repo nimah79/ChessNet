@@ -47,8 +47,22 @@ public class ClientHandler implements Runnable {
 		}
 	}
 
-	public List<String> getUsernamesStartingWith(String prefix) {
-		return this.server.getUsernamesStaringWith(prefix);
+	public List<User> getUsers(String prefix) {
+		return this.server.getUsers(prefix);
+	}
+
+	public List<User> getScoreboard() {
+		List<User> scoreboard = Arrays.asList(this.server.getUsers("").stream()
+				.sorted((u1, u2) -> u1.getWinsCount() - u2.getWinsCount())
+				.limit(10).toArray(User[]::new));
+		if (!this.loggedIn() || scoreboard.contains(this.user)) {
+			return scoreboard;
+		}
+		scoreboard.add(this.user);
+		scoreboard = Arrays.asList(scoreboard.stream()
+				.sorted((u1, u2) -> u1.getWinsCount() - u2.getWinsCount())
+				.toArray(User[]::new));
+		return scoreboard;
 	}
 
 	public User getUser(String username, String password) {
