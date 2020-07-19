@@ -5,6 +5,7 @@ import java.net.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import helper.PasswordHasher;
 import model.User;
 import util.RadixTree;
 
@@ -60,6 +61,18 @@ public class Server implements Serializable {
 		clientListener.start();
 	}
 
+	public void addClientHandler(ClientHandler clientHandler) {
+		this.clients.put(clientHandler.getUsername(), clientHandler);
+	}
+
+	public ClientHandler getClientHandler(String username) {
+		return this.clients.get(username);
+	}
+	
+	public User getUser(String username) {
+		return this.users.get(username);
+	}
+
 	public User getUser(String username, String password) {
 		if (!this.users.containsKey(username)) {
 			return null;
@@ -75,7 +88,7 @@ public class Server implements Serializable {
 		if (this.users.containsKey(username)) {
 			return null;
 		}
-		User user = new User(username, password);
+		User user = new User(username, PasswordHasher.generateHash(password));
 		this.users.put(username, user);
 		this.usersTree.put(username, user);
 		this.saveToFile();

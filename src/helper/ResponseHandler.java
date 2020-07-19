@@ -13,17 +13,19 @@ public class ResponseHandler {
 			@Override
 			public void run() {
 				while (true) {
+					try {
+						Thread.sleep(200);
+					} catch (InterruptedException e) {
+					}
 					if (controller == null) {
 						continue;
 					}
 					Response response = null;
-					synchronized (DB.ois) {
-						try {
-							response = (Response) DB.ois.readObject();
-							controller.handleResponse(response);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+					try {
+						response = (Response) DB.ois.readObject();
+						controller.handleResponse(response);
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
 				}
 			}

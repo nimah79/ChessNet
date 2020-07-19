@@ -33,7 +33,7 @@ public class User implements Serializable {
 	}
 
 	public boolean checkPassword(String passwordHash) {
-		return password.equals(passwordHash);
+		return this.password.equals(PasswordHasher.generateHash(passwordHash));
 	}
 
 	public List<Game> getGames() {
@@ -67,6 +67,19 @@ public class User implements Serializable {
 
 	public int getLosesCount() {
 		return this.losesCount;
+	}
+
+	@Override
+	public String toString() {
+		return this.username;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof User)) {
+			return false;
+		}
+		return ((User) o).getUsername().equals(this.getUsername());
 	}
 
 }

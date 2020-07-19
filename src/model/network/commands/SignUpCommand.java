@@ -22,6 +22,8 @@ public class SignUpCommand implements Command {
 			clientHandler.sendResponse(new SignUpResponse(false));
 			return;
 		}
+		clientHandler.setUser(user);
+		clientHandler.addClientHandler();
 		clientHandler.sendResponse(new SignUpResponse(true, user));
 	}
 

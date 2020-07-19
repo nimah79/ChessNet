@@ -10,7 +10,7 @@ public class ScoreboardResponse implements Response {
 	public List<User> users;
 
 	public ScoreboardResponse(List<User> users) {
-		this.users = new ArrayList<>(users);
+		this.users = users;
 	}
 
 }

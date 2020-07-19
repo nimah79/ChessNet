@@ -35,6 +35,11 @@ public class ClientHandler implements Runnable {
 			}
 		} catch (ClassNotFoundException | IOException e) {
 			clientConnected = false;
+			try {
+				ois.close();
+				oos.close();
+			} catch (IOException e2) {
+			}
 			this.logout();
 		}
 	}
@@ -47,8 +52,16 @@ public class ClientHandler implements Runnable {
 		}
 	}
 
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	public List<User> getUsers(String prefix) {
-		return this.server.getUsers(prefix);
+		List<User> users = this.server.getUsers(prefix);
+		if (this.loggedIn()) {
+			users.remove(this.user);
+		}
+		return users;
 	}
 
 	public List<User> getScoreboard() {
@@ -65,6 +78,21 @@ public class ClientHandler implements Runnable {
 		return scoreboard;
 	}
 
+	public void addClientHandler() {
+		this.server.addClientHandler(this);
+	}
+
+	public String getUsername() {
+		if (!this.loggedIn()) {
+			return null;
+		}
+		return this.user.getUsername();
+	}
+
+	public ClientHandler getClientHandler(String username) {
+		return this.server.getClientHandler(username);
+	}
+
 	public User getUser(String username, String password) {
 		return this.server.getUser(username, password);
 	}
@@ -75,6 +103,11 @@ public class ClientHandler implements Runnable {
 
 	private boolean loggedIn() {
 		return this.user != null;
+	}
+
+	public void changePassword(String username, String password) {
+		this.server.getUser(username).setPassword(password);
+		this.server.saveToFile();
 	}
 
 	private void logout() {

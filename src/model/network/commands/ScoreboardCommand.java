@@ -1,7 +1,7 @@
 package model.network.commands;
 
 import model.network.ClientHandler;
-import model.network.responses.SearchResponse;
+import model.network.responses.ScoreboardResponse;
 
 public class ScoreboardCommand implements Command {
 
@@ -10,7 +10,7 @@ public class ScoreboardCommand implements Command {
 	@Override
 	public void handle(ClientHandler clientHandler) {
 		clientHandler.sendResponse(
-				new SearchResponse(clientHandler.getScoreboard()));
+				new ScoreboardResponse(clientHandler.getScoreboard()));
 	}
 
 }

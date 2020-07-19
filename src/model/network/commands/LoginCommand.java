@@ -22,6 +22,8 @@ public class LoginCommand implements Command {
 			clientHandler.sendResponse(new LoginResponse(false));
 			return;
 		}
+		clientHandler.setUser(user);
+		clientHandler.addClientHandler();
 		clientHandler.sendResponse(new LoginResponse(true, user));
 	}
 
