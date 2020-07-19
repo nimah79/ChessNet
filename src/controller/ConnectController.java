@@ -5,12 +5,14 @@ import javafx.event.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
+import model.network.responses.Response;
 
 import java.io.*;
 import java.net.Socket;
 
 import db.DB;
 import helper.InputValidator;
+import helper.ResponseHandler;
 import helper.SceneLoader;
 
 class ConnectControllerSubmitEventHandler implements EventHandler<KeyEvent> {
@@ -30,7 +32,7 @@ class ConnectControllerSubmitEventHandler implements EventHandler<KeyEvent> {
 
 }
 
-public class ConnectController {
+public class ConnectController implements Controller {
 
 	@FXML
 	private TextField hostField;
@@ -57,6 +59,10 @@ public class ConnectController {
 
 	void submit() {
 		(new Thread(this.getSubmitHandler())).start();
+	}
+
+	public void handleResponse(Response response) {
+		//
 	}
 
 	private Runnable getSubmitHandler() {
@@ -121,6 +127,7 @@ public class ConnectController {
 					@Override
 					public void run() {
 						try {
+							ResponseHandler.startResponseHandler();
 							SceneLoader.show("Auth");
 						} catch (IOException e) {
 							e.printStackTrace();

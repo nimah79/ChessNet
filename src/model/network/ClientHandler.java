@@ -33,7 +33,7 @@ public class ClientHandler implements Runnable {
 				Command command = (Command) this.ois.readObject();
 				command.handle(this);
 			}
-		} catch (Exception e) {
+		} catch (ClassNotFoundException | IOException e) {
 			clientConnected = false;
 			this.logout();
 		}

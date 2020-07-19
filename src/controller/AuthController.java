@@ -32,7 +32,7 @@ class AuthControllerLoginEventHandler implements EventHandler<KeyEvent> {
 
 }
 
-public class AuthController {
+public class AuthController implements Controller {
 
 	@FXML
 	private TextField usernameField;
@@ -50,6 +50,7 @@ public class AuthController {
 	private Label errorLbl;
 
 	public void initialize() {
+		ResponseHandler.controller = this;
 		usernameField
 				.setOnKeyPressed(new AuthControllerLoginEventHandler(this));
 		passwordField
@@ -62,6 +63,56 @@ public class AuthController {
 
 	public void signUp(ActionEvent actionEvent) throws IOException {
 		this.signUp();
+	}
+
+	public void handleResponse(Response response) {
+		if (response instanceof LoginResponse) {
+			LoginResponse loginResponse = (LoginResponse) response;
+			if (!loginResponse.successful) {
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						errorLbl.setText("Invalid credentials.");
+						errorLbl.setVisible(true);
+					}
+				});
+				return;
+			}
+			DB.user = loginResponse.user;
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						SceneLoader.show("Dashboard");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+		} else if (response instanceof SignUpResponse) {
+			SignUpResponse signUpResponse = (SignUpResponse) response;
+			if (!signUpResponse.successful) {
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						errorLbl.setText("Username already exists.");
+						errorLbl.setVisible(true);
+					}
+				});
+				return;
+			}
+			DB.user = signUpResponse.user;
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						SceneLoader.show("Dashboard");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+		}
 	}
 
 	void login() {
@@ -124,38 +175,8 @@ public class AuthController {
 				});
 				try {
 					DB.oos.writeObject(new LoginCommand(username, password));
-					LoginResponse response = (LoginResponse) DB.ois
-							.readObject();
-					if (!response.successful) {
-						Platform.runLater(new Runnable() {
-							@Override
-							public void run() {
-								errorLbl.setText("Invalid credentials.");
-								errorLbl.setVisible(true);
-							}
-						});
-						return;
-					}
-					DB.user = response.user;
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							try {
-								SceneLoader.show("Dashboard");
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-						}
-					});
-				} catch (Exception e) {
+				} catch (IOException e) {
 					e.printStackTrace();
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							errorLbl.setText("Couldn't connect to server.");
-							errorLbl.setVisible(true);
-						}
-					});
 				}
 			}
 		};
@@ -222,29 +243,6 @@ public class AuthController {
 				});
 				try {
 					DB.oos.writeObject(new SignUpCommand(username, password));
-					SignUpResponse response = (SignUpResponse) DB.ois
-							.readObject();
-					if (!response.successful) {
-						Platform.runLater(new Runnable() {
-							@Override
-							public void run() {
-								errorLbl.setText("Username already exists.");
-								errorLbl.setVisible(true);
-							}
-						});
-						return;
-					}
-					DB.user = response.user;
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							try {
-								SceneLoader.show("Dashboard");
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-						}
-					});
 				} catch (Exception e) {
 					e.printStackTrace();
 					Platform.runLater(new Runnable() {
