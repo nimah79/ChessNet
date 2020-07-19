@@ -11,6 +11,9 @@ import javafx.scene.control.Button;
 import model.network.responses.Response;
 
 public class AboutController implements Controller {
+	
+	@FXML
+	private Button dashboardBtn;
 
 	@FXML
 	private Button historyBtn;

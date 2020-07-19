@@ -36,4 +36,12 @@ public class Game {
 		this.chat.add(message);
 	}
 
+	public String getOpponentString() {
+		return this.guest.getUsername();
+	}
+
+	public String getStartedAtString() {
+		return String.valueOf(this.startedAt);
+	}
+
 }

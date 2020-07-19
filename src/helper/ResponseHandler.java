@@ -25,7 +25,6 @@ public class ResponseHandler {
 						response = (Response) DB.ois.readObject();
 						controller.handleResponse(response);
 					} catch (Exception e) {
-						e.printStackTrace();
 					}
 				}
 			}

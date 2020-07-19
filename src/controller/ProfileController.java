@@ -8,15 +8,38 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.text.Text;
 import model.network.commands.ChangePasswordCommand;
 import model.network.responses.Response;
 
 public class ProfileController implements Controller {
 
 	@FXML
+	private Button dashboardBtn;
+
+	@FXML
+	private Button historyBtn;
+
+	@FXML
+	private Button profileBtn;
+
+	@FXML
+	private Button aboutBtn;
+
+	@FXML
+	private Button logoutBtn;
+
+	@FXML
+	private Text usernameLbl;
+
+	@FXML
+	private Button changePasswordBtn;
+
+	@FXML
 	private PasswordField passwordField;
 
 	public void initialize() {
+		usernameLbl.setText("Username: " + DB.user.getUsername());
 		ResponseHandler.controller = this;
 	}
 

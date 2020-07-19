@@ -13,12 +13,15 @@ import javafx.scene.control.Alert.AlertType;
 import model.User;
 import model.network.commands.*;
 import model.network.responses.*;
-// import widgets.AutoCompleteTextField;
+import widgets.AutoCompleteTextField;
 
 public class DashboardController implements Controller {
 
 	@FXML
 	private Label welcomeLbl;
+
+	@FXML
+	private Button dashboardBtn;
 
 	@FXML
 	private Button historyBtn;
@@ -33,7 +36,7 @@ public class DashboardController implements Controller {
 	private Button logoutBtn;
 
 	@FXML
-	private TextField searchField;
+	private AutoCompleteTextField searchField;
 
 	@FXML
 	private Button requestBtn;
@@ -53,7 +56,7 @@ public class DashboardController implements Controller {
 		this.sendSearchCommand("");
 		this.sendScoreboardCommand();
 	}
-	
+
 	public void showDashboardPage(ActionEvent actionEvent) throws IOException {
 		SceneLoader.show("Dashboard");
 	}
@@ -106,7 +109,7 @@ public class DashboardController implements Controller {
 					for (User user : users) {
 						usernames.add(user.getUsername());
 					}
-					// searchField.getEntries().addAll(usernames);
+					searchField.getEntries().addAll(usernames);
 					if (usersTbl != null) {
 						usersTbl.getItems().clear();
 						usersTbl.getItems().addAll(users);
@@ -139,9 +142,9 @@ public class DashboardController implements Controller {
 							+ " has sent you a game request. Do you want to play with him?");
 					Optional<ButtonType> result = alert.showAndWait();
 					if (result.get() == ButtonType.OK) {
-						// ... user chose OK
+						// TODO
 					} else {
-						// ... user chose CANCEL or closed the dialog
+						// TODO
 					}
 				}
 			});
