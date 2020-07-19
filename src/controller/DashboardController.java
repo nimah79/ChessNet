@@ -24,6 +24,18 @@ public class DashboardController implements Controller {
 	private Label welcomeLbl;
 
 	@FXML
+	private Button historyBtn;
+
+	@FXML
+	private Button profileBtn;
+
+	@FXML
+	private Button aboutBtn;
+
+	@FXML
+	private Button logoutBtn;
+
+	@FXML
 	private AutoCompleteTextField searchField;
 
 	@FXML
